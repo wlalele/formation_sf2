@@ -1,0 +1,24 @@
+wlalele_catalog:
+    resource: "@WlaleleCatalogBundle/Controller/"
+    type:     annotation
+    prefix:   /admin
+
+wlalele_security:
+    resource: "@WlaleleCatalogBundle/Controller/SecurityController.php"
+    type:     annotation
+    prefix:  /login
+
+login_check:
+    pattern: /login_check
+
+logout:
+    pattern: /logout
+
+wlalele_homepage:
+    path:   /
+    defaults: { _controller: WlaleleCatalogBundle:Homepage:index }
+
+homepage:
+    resource: "@WlaleleCatalogBundle/Controller/HomepageController.php"
+    type:     annotation
+    prefix:  /

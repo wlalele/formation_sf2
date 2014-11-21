@@ -1,0 +1,37 @@
+{% extends '::admin.html.twig' %}
+
+{% block body -%}
+    <div class="container">
+        <h1>{{ entity.name }}</h1>
+
+        <div class="container">
+            <div class="col-md-6">
+                {% if entity.document %}
+                    <a href="{{ path('homepage_product_show', { 'id': entity.id }) }}" class="thumbnail">
+                        <img data-holder-rendered="true" src="{{ asset('upload/'~entity.document.path) }}" style="display: block;" >
+                    </a>
+                {% endif %}
+                {% if articles %}
+                    {% for article in articles %}
+                        {% if article.document %}
+                            <div class="col-md-4">
+                                <a href="#" class="thumbnail">
+                                    <img data-holder-rendered="true" src="{{ asset('upload/'~article.document.path) }}" style="display: block;" >
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <p>Description: </p>
+                <p>{{ entity.description }}</p>
+
+                {{ form(show_product_form) }}
+
+                <p>Prix: </p>
+                <a href="#" class="btn btn-danger">Panier</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

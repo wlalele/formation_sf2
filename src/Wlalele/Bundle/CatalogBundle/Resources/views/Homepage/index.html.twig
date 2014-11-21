@@ -1,0 +1,23 @@
+{% extends '::admin.html.twig' %}
+
+{% block body -%}
+    <div class="container">
+        <h1>Products Homepage</h1>
+
+        <div class="container">
+            <div class="row">
+                {% for entity in entities %}
+                <div product_id='{{ entity.id }}' class="col-xs-6 col-md-3">
+                    {% if entity.document %}
+                        <a href="{{ path('homepage_product_show', { 'id': entity.id }) }}" class="thumbnail">
+                            <img data-holder-rendered="true" src="{{ asset('upload/'~entity.document.path) }}" style="display: block;" >
+                        </a>
+                    {% endif %}
+                    <p>{{ entity.name }}</p>
+                    <p>{{ entity.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
