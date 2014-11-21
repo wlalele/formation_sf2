@@ -206,4 +206,9 @@ class Article
     {
         return $this->price;
     }
+
+    public function __toString()
+    {
+        return $this->color.' - '.$this->size;
+    }
 }

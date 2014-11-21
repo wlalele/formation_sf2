@@ -3,10 +3,13 @@
 namespace Wlalele\Bundle\CatalogBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Wlalele\Bundle\CatalogBundle\Entity\ChoiceArticle;
+use Wlalele\Bundle\CatalogBundle\Entity\Product;
 use Wlalele\Bundle\CatalogBundle\Form\ShowProductType;
 
 /**
@@ -53,7 +56,7 @@ class HomepageController extends Controller
         }
 
         $articles = $em->getRepository('WlaleleCatalogBundle:Article')->getArticlesByProductId($id);
-        $show_product_form = $this->createShowProductForm();
+        $show_product_form = $this->createShowProductForm($entity);
 
         return array(
             'entity'      => $entity,
@@ -62,11 +65,39 @@ class HomepageController extends Controller
         );
     }
 
-    private function createShowProductForm()
+    private function createShowProductForm($entity)
     {
-        $form = $this->createForm(new ShowProductType());
+        $form = $this->createForm(new ShowProductType(), new ChoiceArticle($entity), array(
+            'action' => $this->generateUrl('basket_add'),
+            'method' => 'POST',
+        ));
 
+        $form->add('submit', 'submit', array('label' => 'Add to basket'));
 
         return $form;
+    }
+
+    /**
+     * @var request
+     * @Route("/basket/add", name="basket_add")
+     * @Method("POST")
+     * @Template()
+     */
+    public function addToBasketAction(Request $request)
+    {
+        $entity = new ChoiceArticle(new Product());
+
+        $article_form = $this->createForm(new ShowProductType(), $entity, array());
+        $article_form->handleRequest($request);
+
+        if (!$this->get('session')->has('basket')) {
+            $basket = [$entity];
+        } else {
+            $basket[] = $entity;
+        }
+
+        $this->get('session')->set('basket', $basket);
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }
